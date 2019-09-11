@@ -1,6 +1,7 @@
 const express = require('express');
 
 const db = require('../data/db-config.js');
+const Users = require('./user-model.js')
 
 const router = express.Router();
 
@@ -80,15 +81,7 @@ router.delete('/:id', (req, res) => {
 router.get('/:id/posts', (req, res) => {
   const { id } = req.params
 
-  /* 
-  select * from posts as p
-  join users as u ON u.id = p.user_id
-  where u.id = 123
-  */
-
-  db('posts as p')
-    .join('users as u', 'u.id', '=', 'p.user_id')
-    .where({user_id: id})
+  Users.findUserPosts(id)
     .then(posts => {
       res.status(200).json(posts)
     })
